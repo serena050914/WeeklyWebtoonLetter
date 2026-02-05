@@ -1,0 +1,44 @@
+// 패키지 매니져들이 참고하는 프로젝트 설정 정보 문서
+// json 형식임
+{
+  "name": "node-ts-boilerplate", //프로젝트 이름, npm 패키지 이름, 로컬 프로젝트에선 큰 의미 없음, npm 배포하면 이 이름으로 올라감
+  "version": "1.0.0", //버전정보(배포용 메타데이터)
+  "description": "Node.js TypeScript boilerplate for running scripts with GitHub Actions", //설명문구(npm/GitHub에서 보이는 텍스트)
+  "main": "dist/index.js", //이 프로젝트의 "대표 엔트리 파일"
+  "scripts": { //npm에게 이걸 치면 이 명령을 실행하라고 알려주는 영역
+    "build": "tsc", // 실제 내부 실행은 ./node_modules/.bin/tsc 이거임. 
+    //즉 타입스크립트 컴파일러 실행임
+    "start": "node dist/index.js", // 컴파일된 js 파일을 실행하는 것. (npm run build가 먼저 실행돼서 dist/index.js가 있어야함)
+    "dev": "ts-node src/index.ts", // 걍 ts 파일을 실행함. <- 느리지만, 아직 개발 중일 때 사용
+    "lint": "eslint src/**/*.ts", //src 아래 모든 ts 파일 검사, 규칙 위반 시 에러
+    "lint:fix": "eslint src/**/*.ts --fix", //lint와 동일한데 자동수정까지 진행
+    "format": "prettier --write \"src/**/*.ts\"", //코드 스타일 정렬, 실제 파일 수정함
+    "test": "jest", //
+    "clean": "rm -rf dist",
+    "script:hello": "ts-node src/scripts/hello.ts", //hello.ts 파일만 실행함, index.ts 파일을 실행하는 게 아님, 즉 특정 백엔드 로직 파일만 실행하는거
+    "script:data-process": "ts-node src/scripts/data-processor.ts", //이것도 해당 파일만 실행함
+    "script:logger-example": "ts-node src/scripts/logger-example.ts"
+  },
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "boilerplate",
+    "github-actions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.19.30",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.1",
+    "winston": "^3.11.0"
+  }
+}

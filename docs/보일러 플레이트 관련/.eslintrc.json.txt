@@ -1,0 +1,19 @@
+//eslint 가 읽는 설정파일이다.
+//안 쓰는 변수, 위험한 패턴, 논리 실수, 타입 관련 경고 등을 판단해주는 애임
+
+{
+  "parser": "@typescript-eslint/parser", //이거를 쓰면 eslint가 ts를 이해할 수 있음
+  "extends": [ //규칙 묶음 프리셋
+    "eslint:recommended", //ESLint 기본 제공 규칙 모음
+    "plugin:@typescript-eslint/recommended" //ts 전용 추천 규칙 모음
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2022, //최신 js 문법 허용
+    "sourceType": "module" //ESM 기반 프로젝트임을 명시, import/esport 사용가능
+  },
+  "rules": { //추가적인 규칙 넣기
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }], 
+    "@typescript-eslint/explicit-function-return-type": "off", //함수에 반환 타입 강제 안 함.
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
+}

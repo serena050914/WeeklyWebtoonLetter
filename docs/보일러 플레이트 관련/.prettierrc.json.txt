@@ -1,0 +1,13 @@
+//코드를 이렇게 정렬하라고 알려주는 설정 파일
+//포맷터인 Prettier가 읽음.
+//세미콜론, 따옴표, 줄바꿈, 들여쓰기 등을 자동 수정함.
+
+{
+  "semi": true, //문장 끝에 세미콜론 붙여라
+  "trailingComma": "es5", //마
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "arrowParens": "always"
+}
