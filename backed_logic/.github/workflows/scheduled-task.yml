@@ -1,0 +1,40 @@
+name: Scheduled Tasks
+
+on:
+  # 매일 실행
+  schedule:
+    - cron: '0 0 * * *'
+
+  # Allow manual trigger
+  # workflow_dispatch:
+
+jobs:
+  hourly-task:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run scheduled task
+        run: npm run script:rss-parsing.ts
+        env:
+          NODE_ENV: production #운영모드로 실행해라
+
+      - name: Notify on failure
+        # 크론 작업은 사람이 안 보고 있으니까, 실패 시 최소한 로그를 남기려는 장치
+        if: failure() #GitHub Actions 내장 함수임
+        run: |
+          echo "❌ Scheduled task failed"
+          echo "Timestamp: $(date)"
+
+        # echo "여기의 문구를 출력"

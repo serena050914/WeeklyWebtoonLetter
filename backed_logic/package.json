@@ -1,0 +1,46 @@
+{
+  "name": "node-ts-boilerplate",
+  "version": "1.0.0",
+  "description": "Node.js TypeScript boilerplate for running scripts with GitHub Actions",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "jest",
+    "clean": "rm -rf dist",
+    "script:hello": "ts-node src/scripts/example/hello.ts",
+    "script:data-process": "ts-node src/scripts/example/data-processor.ts",
+    "script:logger-example": "ts-node src/scripts/example/logger-example.ts",
+    "script:rss-parsing": "ts-node src/scripts/rss-parsing.ts",
+    "script:select-items": "ts-node src/scripts/select-items.ts",
+    "script:edit-letter": "ts-node src/scripts/edit-letter.ts"
+  },
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "boilerplate",
+    "github-actions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.19.30",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.2",
+    "commander": "^12.1.0",
+    "dotenv": "^16.6.1",
+    "rss-parser": "^3.13.0",
+    "winston": "^3.11.0"
+  }
+}

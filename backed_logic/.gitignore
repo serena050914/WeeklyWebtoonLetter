@@ -1,0 +1,46 @@
+# git이 무시할 문서의 이름을 적은 파일
+# 
+
+# Dependencies
+node_modules/
+#이건 node_modules 파일 내의 모든 파일들을 무시하라는 뜻
+yarn.lock
+#해당 이름의 파일을 무시하라는 뜻
+
+# Build output
+# dist는 자동생성물로 소스가 아님. git에는 안 올리는 게 정석
+dist/
+build/
+*.tsbuildinfo
+#.tsbuildinfo가 확장자인 모든 파일 무시
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+#npm-debug.log*로 시작하는 모든 파일 무시
+
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+temp/
+tmp/

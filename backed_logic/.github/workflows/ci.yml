@@ -1,0 +1,76 @@
+#YAML :
+# GitHub가 원래는 그냥 저장만 하던 코드에 대해
+# 특정 이벤트가 발생하면, 정해진 환경에서 정해진 순서로 자동 검사를 실행하도록 작성하는 문서.
+# (-> 이 YAML을 어떻게 해석할지는 이미 GitHub가 구현해둠, 우리는 약속된 키이름을 쓰는 것 뿐)
+
+# GitHub Actions :
+# 미리 정의된 이벤트 이름과 설정 키들을
+# YAML로 선언적으로 적어두면
+# GitHub가 그 선언을 보고
+# 알아서 실행해주는 시스템
+
+# GitHub :
+# 짱 큰 서버를 돌리고 있고,
+# 우리가 거긱에 실행규칙이 적힌 코드를 등록해두면
+# GitHub가 내부 서버 풀에서 실행을 처리해준다.
+# (즉, 시간 스케줄에 따른 실행을 처리하고 싶을 때,
+# 직접 서버를 빌려서 시간 스케줄을 상시 가동해둘 필요 없이,
+# GitHub에 코드를 등록해두면, (GitHub는 어차피 시간 스케줄을 돌리고 있기 때문에)
+# 서버를 돌릴 필요 없이 그 시각에 코드 실행이 가능하다!)
+
+#기본문법규칙 :
+# key : value 형태
+# 들여쓰기로 부모/자식 표현
+# -는 리스트(배열)
+# 문자열 따옴표 없이 써도 됨.
+# ${{}}는 GitHub Actions 전용 표현식
+
+name: CI #CI라는 이름으로 이 자동작업을 등록 (워크플로우 이름 등록)
+
+on: # 아래에 적힌 이벤트가 발생하면 실행대상에 올린다. (는 미리 정의된 key)
+  push: # git push 이벤트가 발생시, 이 워크 플로우를 실행후보로 올린다.
+    branches: [main, develop] # main, develop 브랜치의 push일 때만!
+  pull_request: # PR이 열리거나 업데이트 되면 실행후보로 올린다.
+    branches: [main, develop]
+
+jobs: # 실제로 실행할 내용들을 정의하는 키
+  lint-and-build: # lint-and-build 라는 이름의 키 생성 (이름을 가진 하나의 작업 단위)
+    runs-on: ubuntu-latest # 이 작업은 최신 Ubuntu 환경에서 실행한다.
+
+    strategy: # 작업실행 계획
+      matrix: # 단일환경 실행이 아닌, 조건 별로 1회씩 실행
+        node-version: [18.x, 20.x] # 18환경에서 1번, 20환경에서 한 번 실행 (환경 별로 문제 없는지 검증 목적)
+
+    steps: # 실제로 실행할 순서대로의, 실행 스크립트 시작점.
+      - name: Checkout code # 저장소 코드를 VM(코드 실행할 ubuntu환경) clone 한다.
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}  # 내가 해당 수행단위에 붙일 이름
+        uses: actions/setup-node@v4 # Node 버전을 설치하는 이미 있는 명령어 (uses : 는 이미 만들어진 액션을 사용하겠다는 뜻)
+        with: # 액션에 옵션을 넘기는 키
+          node-version: ${{ matrix.node-version }}  #노드 버전 옵션
+          cache: 'npm'  # npm cache 디렉터리를 저장한 후, 다음 실행 시 재사용한느 옵션
+
+      - name: Install dependencies
+        run: npm ci # run은 쉘에서 이 명령을 실행하라는 GitHub Actions 예약 키
+          # npm ci는 npm 명령어로 package-lock.json 기준으로 정확한 버전을 설치하고, node_modules를 새로 생성하는 액션
+
+      - name: Run linter
+        run: npm run lint
+          # package.json의 scripts.lint를 실행하는 npm 명령어
+          # 목적 : 코드 품질을 강제한다. (코드 스타일이 미리 지정한 규칙을 위반할 시 실패함.)
+
+      - name: Check formatting
+        run: npm run format -- --check
+         # 
+         # 목적 : 포맷 불일치 시 실패로 간주 (prettier 기준 어기면 실패)
+
+      - name: Build TypeScript
+        run: npm run build
+
+         # 목적 : 타입 에러 있으면 실패
+
+      - name: Run tests
+        run: npm test
+        continue-on-error: true # 이 스탭 실패해도 job 전체를 실패 처리 하지 말라는 GitHub Actions 예약키
+        # 목적 : 테스트를 실행한다 (실패해도 전체 실패는 아님, 참고용 테스트)

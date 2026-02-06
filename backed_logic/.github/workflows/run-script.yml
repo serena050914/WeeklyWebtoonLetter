@@ -1,0 +1,70 @@
+name: Run Scripts # 이 워크플로우 이름
+
+on:
+  # Manual trigger
+  workflow_dispatch: # Actions 탭에 Run workflow 버튼이 생겨서, 사람이 직접 워크플로우를 실행 가능함.
+    inputs: # 이 워크플로우 실행시 사용자에게 값을 하나 받아온다.
+      script:
+        description: 'Script to run (rss-parsing, select-items, or edit-letter)' # ui에 보여줄 설명문구
+        required: true # 입력 값이 있어야 (true)여야 실행
+        default: 'rss-parsing'
+        type: choice # 드롭다운 타입의 입력임
+        options:
+          - rss-parsing
+          - select-items
+          - edit-letter
+  # -> 실행시, gitjub.event.inputs.script 값에 옵션 값 중 하나가 할당됨
+
+  # Scheduled runs (every day at 00:00 UTC)
+  # schedule: # 시간 기반 워크플로우 자동실행.
+  #  - cron: '0 0 * * *' # 매일 00:00 UTC에
+  # 이 실행은 입력 값이 없으므로, 자동 실행될 시 github.event.inputs.script는 빈값임
+
+  # Trigger on push to main branch.
+
+  push:
+    branches:
+      - main #
+    paths:
+      - 'src/**'
+      - '.github/workflows/**'
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run rss-parsing Script
+        if: github.event.inputs.script == 'rss-parsing' || github.event.inputs.script == ''
+        run: npm run script:rss-parsing
+
+      - name: Run select-items
+        if: github.event.inputs.script == 'select-items'
+        run: npm run script:select-items
+
+      - name: Run edit-letter
+        if: github.event.inputs.script == 'edit-letter'
+        run: npm run script:edit-letter
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4 # 실행한 결과를 저장하는 액션
+        if: always() # 이전 step 실패해도 무조건 실행
+        with:
+          name: build-output # 아티팩트를 저장할 이름
+          path: dist/ # dist 폴더 내에 저장
+          retention-days: 7 # 보관기간 설정 키
