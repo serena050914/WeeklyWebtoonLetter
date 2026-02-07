@@ -5,12 +5,27 @@
  *
  */
 
-import 'dotenv/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { createInterface } from 'readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
+import 'dotenv/config'; //.env 파일에 적어둔 환경변수들을 process.env 안으로 자동 로딩해주는 라이브러리
+import { createClient, SupabaseClient } from '@supabase/supabase-js'; //supabase와 통신하기 위한 라이브러리
+//createClient() = 수파베이스와 통신하기 위한 클라이언트 객체를 만들어주는 함수
+//SupabaseClient = 위 함수의 반환 값으로, 클라이언트 객체의 타입(클래스)임.
+
+import { createInterface } from 'readline/promises'; //node.js의 기본 라이브러리로, 터미널에서 입력,출력 다룸, 이건 /promises 가 붙어서 async-await 용으로 만든 애임
+//createInterface는 터미널 입력을 받을 수 있는 인터페이스 객체를 만들어주는 함수임
+//얘는 js라서 타입을 안 받아오는 거임
+
+import { stdin as input, stdout as output } from 'node:process'; //node:process는 Node.js 내장모듈에서 process 객체를 명시적으로 import하는 작성방식
+//여기서 as는 ES모듈의 문법으로, 왼쪽으로 export 된 걸, 오른쪽으로 import 하겠다는 뜻임
+//process.stdin, process.stdout 임.
+// 각각 표준 입력과 표준 출력 객체프로퍼티임.
+// process = {
+//   stdin: ReadableStream 객체, <- 스트림 객체임.
+//   stdout: WritableStream 객체,
+//   ...
+// }
 
 type NewsletterRow = {
+  //newsletter 타입을 만듦
   id: number;
   issue: number | null;
   comment: string | null;
@@ -19,29 +34,31 @@ type NewsletterRow = {
 };
 
 function mustEnv(key: string): string {
+  //dotenv가 process.env에 추가해준 env 값이 잘 있는지 확인하는 함수. 중요한 env 값이라 없는 경우 바로 에러 던짐.
   const v = process.env[key];
-  if (!v) throw new Error(`Missing env: ${key}`);
+  if (!v) throw new Error(`Missing env: ${key}`); //걍 mustENV를 전역 호출한 경우 바로 프로그램 중단되는 것이지
   return v;
 }
+//
 
-/**
- * 로컬 시간 기준 "이번 주 월요일 00:00:00" ~ "다음 주 월요일 00:00:00" 범위
- */
-function getWeekRangeLocal(now = new Date()) {
-  const d = new Date(now);
-  d.setHours(0, 0, 0, 0);
+function getWeekRangeLocal(
+  now = new Date() /*받아온 값이 있으면 그게 now고, 없으면 새로 현재 데이트를 받아서 now로 사용함*/
+) {
+  const d = new Date(now); //매개변수의 의미를 지닌 변수를 그대로 사용하지 않기 위해, 복사본을 하나 만듦
+  d.setHours(0, 0, 0, 0);   //데이트의 메서드로 시간을 0시 0분으로 맞춤
 
   // JS: 일=0, 월=1, ... 토=6
-  const day = d.getDay();
-  const diffToMonday = (day + 6) % 7; // 월요일이면 0, 화=1 ... 일=6
-  const start = new Date(d);
-  start.setDate(d.getDate() - diffToMonday);
+  const day = d.getDay();   //요일을 숫자값으로 반환하는 함수
+  const diffToMonday = (day + 6) % 7; // 오늘의 요일에 6 더한 걸 7일로 나눈 나머지값.
+  const start = new Date(d);    //d를 기준으로 새 데이트 생성
+  start.setDate(d.getDate() - diffToMonday);    // d로부터 날짜를 가져온 후, 거기서 월요일로부터의 거리를 빼고, 그걸로 스타트의 데이트 정하기
+  //date는 날짜가 0이하가 돼도 자동으로 지난달로 가서 계산해줌
   start.setHours(0, 0, 0, 0);
 
-  const end = new Date(start);
-  end.setDate(start.getDate() + 7);
+  const end = new Date(start); //스타트 기준으로 새 데이트 생성
+  end.setDate(start.getDate() + 7); //스타트에서 날짜 가져온 후 7 더하기
 
-  return { start, end };
+  return { start, end };    //이번주의 시작일과 마지막일의 날짜를 담은 객체를 반환함
 }
 
 async function getOrCreateThisWeekNewsletter(supabase: SupabaseClient): Promise<NewsletterRow> {

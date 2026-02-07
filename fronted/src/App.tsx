@@ -1,14 +1,18 @@
 import { Route, Routes } from "react-router-dom";
 
-import Subscribe from "./pages/subscribe";
-import ReviewList from "./pages/reviewList";
+import SubscribePage from "./pages/subscribePage";
+import Unsubscribe from "./pages/unsubscribePage";
 
 function App() {
   return (
-    <Routes>
-      <Route element={<Subscribe />} path="/" />
-      <Route element={<ReviewList />} path="/reviewList" />
-    </Routes>
+    <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-[#FFF7ED] via-[#FDF2F8] to-[#FFFFFF]">
+      <div className="max-w-lg w-full min-h-screen pt-12 px-4">
+        <Routes>
+          <Route element={<SubscribePage />} path="/" />
+          <Route element={<Unsubscribe />} path="/unsubscribe" />
+        </Routes>
+      </div>
+    </div>
   );
 }
 

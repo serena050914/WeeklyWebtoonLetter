@@ -120,7 +120,7 @@ async function main() {
       }
 
       const menu = await rl.question(
-        'issue 아이템을 선택하려면 i를 종합코멘트를 작성하려면 c를 입력하라고 띄우셈. 종료하시려면 x를 입력하라고도 띄우셈\n> '
+        'issue 아이템을 선택하려면 i를 종합코멘트를 작성하려면 c를 입력하라고 종료하시려면 x를 입력하라고도\n> '
       );
 
       const choice = menu.trim().toLowerCase();

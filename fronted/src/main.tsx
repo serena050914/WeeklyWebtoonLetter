@@ -8,12 +8,10 @@ import "@/styles/globals.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <div className="light flex flex-col w-full px-6">
       <BrowserRouter>
         <Provider>
           <App />
         </Provider>
       </BrowserRouter>
-    </div>
   </React.StrictMode>,
 );
