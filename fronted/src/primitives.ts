@@ -6,9 +6,9 @@ export const title = tv({
   variants: {
     //바꿀 수 있는 값들
     size: {
-      sm: "text-xl lg:text-2xl", //기본적으로 3xl, 화면이 lg 이상일 때는 4xl
-      md: "text-23xl lg:text-3xl",
-      lg: "text-3xl lg:text-4xl",
+      sm: "text-sm lg:text-base", //기본적으로 3xl, 화면이 lg 이상일 때는 4xl
+      md: "text-lg lg:text-xl",
+      lg: "text-xl lg:text-2xl",
     },
 
     color: {
@@ -36,9 +36,9 @@ export const subtitle = tv({
 
   variants: {
     size: {
-      sm: "text-sm lg:text-base",
-      md: "text-base lg:text-lg",
-      lg: "text-lg lg:text-xl",
+      sm: "text-xs lg:text-sm",
+      md: "text-sm lg:text-base",
+      lg: "text-base lg:text-lg",
     },
 
     color: {

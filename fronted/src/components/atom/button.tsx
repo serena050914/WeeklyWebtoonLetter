@@ -7,16 +7,15 @@ type MyButtonProps = {
   variant?: "default" | "point" | "dark";
   label: string;
   type?: "button" | "submit" | "reset";
+  onClick?: () => void;
 };
-
-// React 컴포넌트는 인자를 여러개 못 받음.
-// // 렌더링 단위, 변경 감지, 비교 최적화를 하기 위해서 props 객체 하나로 이전 값 다음 값을 비교해야 하기 때문
 
 export default function MyButton({
   color = "primary",
   variant = "default",
   label,
   type = "button",
+  onClick, // ✅ 추가: props에서 받기
 }: MyButtonProps) {
   const className =
     variant === "point"
@@ -30,6 +29,7 @@ export default function MyButton({
       type={type}
       color={variant === "default" ? color : "default"}
       className={className}
+      onPress={onClick} // ✅ 추가: HeroUI는 onPress 사용
     >
       {label}
     </Button>

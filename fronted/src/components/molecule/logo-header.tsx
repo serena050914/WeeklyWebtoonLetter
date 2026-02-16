@@ -20,10 +20,10 @@ export default function LogoHeader({
     <div className="flex flex-col items-center gap-4 mb-2">
       <MyIcon label={iconLabel ?? ""} variant={iconVariant} />
 
-      <h1 className={title({ size: "sm", align: "center" })}>{titleText}</h1>
+      <h1 className={title({ size: "lg", align: "center" })}>{titleText}</h1>
 
       <p
-        className={subtitle({ size: "sm", align: "center", color: "default" })}
+        className={subtitle({ size: "md", align: "center", color: "default" })}
       >
         {subtitleText}
       </p>
