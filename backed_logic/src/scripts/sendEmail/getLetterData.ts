@@ -6,11 +6,14 @@ const { start, end } = getWeekRangeLocal();
 
 // getLetterData 함수
 async function GetLetterData(supabase: SupabaseClient): Promise<NewsletterRow> {
+  const isoStart = new Date(start).toISOString();
+  const isoEnd = new Date(end).toISOString();
+
   const { data, error } = await supabase
     .from('newsletter')
-    .select('id, issue, comment, created_at, is_sent')
-    .gte('created_at', start)
-    .lte('created_at', end);
+    .select('id, issue, comment, is_sent')
+    .gte('created_at', isoStart)
+    .lte('created_at', isoEnd);
 
   if (error) {
     throw new Error('Error fetching data from Supabase: ' + error.message);
