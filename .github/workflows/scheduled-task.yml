@@ -3,7 +3,7 @@ name: Scheduled Tasks
 on:
   # 매일 실행
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
   # Allow manual trigger
   # workflow_dispatch:
@@ -19,16 +19,27 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
+          # package-lock.json이 레포 루트가 아니라 backed_logic 안에 있어서 캐시 기준 경로 지정
+          cache-dependency-path: backed_logic/package-lock.json
 
       - name: Install dependencies
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 설치해야 함
+        working-directory: backed_logic
         run: npm ci
 
       - name: Run scheduled task
-        run: npm run script:rss-parsing.ts
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
+        # package.json scripts에 맞춰 script:rss-parsing 로 실행 (로컬에서 성공한 명령)
+        working-directory: backed_logic
+        run: npm run script:rss-parsing
         env:
           NODE_ENV: production #운영모드로 실행해라
+          # 아래 두 줄은 Supabase 등 외부 서비스 연결이 필요할 때 사용
+          # (GitHub repo Settings > Secrets and variables > Actions 에 등록해두면 됨)
+          # SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          # SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Notify on failure
         # 크론 작업은 사람이 안 보고 있으니까, 실패 시 최소한 로그를 남기려는 장치

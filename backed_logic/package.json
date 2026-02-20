@@ -17,7 +17,8 @@
     "script:logger-example": "ts-node src/scripts/example/logger-example.ts",
     "script:rss-parsing": "ts-node src/scripts/rss-parsing.ts",
     "script:select-items": "ts-node src/scripts/select-items.ts",
-    "script:edit-letter": "ts-node src/scripts/edit-letter.ts"
+    "script:edit-letter": "ts-node src/scripts/edit-letter/edit-letter.ts",
+    "script:send-email": "ts-node src/scripts/sendEmail/callSendEmail.ts"
   },
   "keywords": [
     "typescript",
@@ -37,6 +38,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@supabase/supabase-js": "^2.95.2",
     "commander": "^12.1.0",
     "dotenv": "^16.6.1",

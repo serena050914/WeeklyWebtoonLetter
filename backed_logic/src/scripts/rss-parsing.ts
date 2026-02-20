@@ -25,7 +25,7 @@ type RssItemInsert = {
   link: string; // guid
   published_at: string | null; // timestamptz (ISO string)
   source_id: number;
-  truncated: string | null; // description text
+  summary: string | null; // description text
   img: string | null; // image src extracted from description/html
 };
 
@@ -162,7 +162,7 @@ async function collectNewItemsForSource( //새아이템만 수집하는 함수
       link: guid || String((it as any).link ?? '').trim(), // 너가 말한대로 "사실은 guid"
       published_at: publishedAtISO,
       source_id: source.id,
-      truncated: descText,
+      summary: descText,
       img,
     });
   }

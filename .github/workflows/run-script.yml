@@ -5,9 +5,9 @@ on:
   workflow_dispatch: # Actions 탭에 Run workflow 버튼이 생겨서, 사람이 직접 워크플로우를 실행 가능함.
     inputs: # 이 워크플로우 실행시 사용자에게 값을 하나 받아온다.
       script:
-        description: 'Script to run (rss-parsing, select-items, or edit-letter)' # ui에 보여줄 설명문구
+        description: "Script to run (rss-parsing, select-items, or edit-letter)" # ui에 보여줄 설명문구
         required: true # 입력 값이 있어야 (true)여야 실행
-        default: 'rss-parsing'
+        default: "rss-parsing"
         type: choice # 드롭다운 타입의 입력임
         options:
           - rss-parsing
@@ -26,8 +26,8 @@ on:
     branches:
       - main #
     paths:
-      - 'src/**'
-      - '.github/workflows/**'
+      - "src/**"
+      - ".github/workflows/**"
 
 jobs:
   run-script:
@@ -40,25 +40,37 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
+          # package-lock.json이 레포 루트가 아니라 backed_logic 안에 있어서 캐시 기준 경로 지정
+          cache-dependency-path: backed_logic/package-lock.json
 
       - name: Install dependencies
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 설치해야 함
+        working-directory: backed_logic
         run: npm ci
 
       - name: Build TypeScript
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 빌드해야 함
+        working-directory: backed_logic
         run: npm run build
 
       - name: Run rss-parsing Script
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
         if: github.event.inputs.script == 'rss-parsing' || github.event.inputs.script == ''
+        working-directory: backed_logic
         run: npm run script:rss-parsing
 
       - name: Run select-items
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
         if: github.event.inputs.script == 'select-items'
+        working-directory: backed_logic
         run: npm run script:select-items
 
       - name: Run edit-letter
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
         if: github.event.inputs.script == 'edit-letter'
+        working-directory: backed_logic
         run: npm run script:edit-letter
 
       - name: Upload build artifacts
@@ -66,5 +78,5 @@ jobs:
         if: always() # 이전 step 실패해도 무조건 실행
         with:
           name: build-output # 아티팩트를 저장할 이름
-          path: dist/ # dist 폴더 내에 저장
+          path: backed_logic/dist/ # dist 폴더 내에 저장
           retention-days: 7 # 보관기간 설정 키
