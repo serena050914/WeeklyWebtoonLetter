@@ -36,6 +36,8 @@ jobs:
         run: npm run script:rss-parsing
         env:
           NODE_ENV: production #운영모드로 실행해라
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           # 아래 두 줄은 Supabase 등 외부 서비스 연결이 필요할 때 사용
           # (GitHub repo Settings > Secrets and variables > Actions 에 등록해두면 됨)
           # SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
