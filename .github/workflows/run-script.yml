@@ -60,6 +60,10 @@ jobs:
         if: github.event.inputs.script == 'rss-parsing' || github.event.inputs.script == ''
         working-directory: backed_logic
         run: npm run script:rss-parsing
+         env:
+          NODE_ENV: production #운영모드로 실행해라
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Run select-items
         # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
