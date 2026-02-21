@@ -1,3 +1,4 @@
+// RecentReviewList.tsx
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import LogoHeader from "../molecule/logo-header";
@@ -7,20 +8,18 @@ import { subtitle } from "../../primitives";
 import InformCardList from "../molecule/InformCardList";
 
 type Post = {
-  // ✅ 추가(로컬 타입 통일용)
   img_src: string;
   title: string;
   summary: string;
   creater: string;
   published_at: string;
-  link: string; // ✅ 추가
+  link: string;
 };
 
 type RecentReviewListProps = {
-  posts: Post[]; // ✅ 변경: link 포함 Post로 통일
+  posts: Post[];
   onClick?: () => void;
-
-  onPostClick?: (post: Post) => void; // ✅ 변경: link 포함 Post로 통일
+  onPostClick?: (post: Post) => void;
 };
 
 export default function RecentReviewList({
@@ -58,8 +57,9 @@ export default function RecentReviewList({
       >
         구독취소
       </h2>
-      <RecentOrderedList posts={posts} onPostClick={onPostClick} />{" "}
-      {/* ✅ 변경 */}
+      <RecentOrderedList posts={posts} onPostClick={onPostClick} />
+      {/* ✅ sentinel ref 추가: ref로 DOM 요소로 접근 */}
+      <div id="sentinel" className="h-4 w-full"></div>
     </div>
   );
 }

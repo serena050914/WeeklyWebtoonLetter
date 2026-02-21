@@ -20,6 +20,7 @@ export type EmailData = {
 };
 
 export type EditedData = {
+  comment: string;
   issue_img_src: string;
   issue_title: string;
   issue_summary: string;

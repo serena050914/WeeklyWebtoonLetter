@@ -16,6 +16,7 @@ async function GetEditedData(): Promise<EditedData> {
 
   // EditedData 객체 초기화
   const editedData: EditedData = {
+    comment: newsletterRow.comment || '',
     issue_img_src: '',
     issue_title: '',
     issue_summary: '',
@@ -49,6 +50,7 @@ async function GetEditedData(): Promise<EditedData> {
   };
 
   // GetPostsData에서 0번 인덱스부터 순차적으로 포스트 데이터를 채움
+  let j = 0; // issue가 아닌 일반 포스트의 인덱스를 추적하기 위한 변수
   for (let i = 0; i < postsData.length; i++) {
     const post = postsData[i];
 
@@ -58,40 +60,42 @@ async function GetEditedData(): Promise<EditedData> {
       editedData.issue_title = post.title || '';
       editedData.issue_summary = post.summary || '';
       editedData.issue_link = post.link || '';
+      j--;
     } else {
       // 하드코딩 방식으로 각 포스트의 인덱스에 맞게 값 채우기
-      if (i === 0) {
+      if (j === 0) {
         editedData.img_src1 = post.img_src || '';
         editedData.title1 = post.title || '';
         editedData.summary1 = post.summary || '';
         editedData.link1 = post.link || '';
-      } else if (i === 1) {
+      } else if (j === 1) {
         editedData.img_src2 = post.img_src || '';
         editedData.title2 = post.title || '';
         editedData.summary2 = post.summary || '';
         editedData.link2 = post.link || '';
-      } else if (i === 2) {
+      } else if (j === 2) {
         editedData.img_src3 = post.img_src || '';
         editedData.title3 = post.title || '';
         editedData.summary3 = post.summary || '';
         editedData.link3 = post.link || '';
-      } else if (i === 3) {
+      } else if (j === 3) {
         editedData.img_src4 = post.img_src || '';
         editedData.title4 = post.title || '';
         editedData.summary4 = post.summary || '';
         editedData.link4 = post.link || '';
-      } else if (i === 4) {
+      } else if (j === 4) {
         editedData.img_src5 = post.img_src || '';
         editedData.title5 = post.title || '';
         editedData.summary5 = post.summary || '';
         editedData.link5 = post.link || '';
-      } else if (i === 5) {
+      } else if (j === 5) {
         editedData.img_src6 = post.img_src || '';
         editedData.title6 = post.title || '';
         editedData.summary6 = post.summary || '';
         editedData.link6 = post.link || '';
       }
     }
+    j++;
   }
 
   return editedData;

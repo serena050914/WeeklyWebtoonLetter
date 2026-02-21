@@ -38,7 +38,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@emailjs/nodejs": "^5.0.2",
     "@supabase/supabase-js": "^2.95.2",
     "commander": "^12.1.0",

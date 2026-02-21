@@ -37,7 +37,10 @@ emailjs.init({
  */
 export function sendEmailWithEmailJS(templateParams: EditedData): Promise<any> {
   return emailjs
-    .send(SERVICE_ID, TEMPLATE_ID, templateParams)
+    .send(SERVICE_ID, TEMPLATE_ID, templateParams, {
+      publicKey: PUBLIC_KEY,
+      privateKey: PRIVATE_KEY, // optional, highly recommended for security reasons
+    })
     .then((response) => {
       // 이메일 전송 성공 시
       console.log(`이메일 전송 성공: ${templateParams.email}`);

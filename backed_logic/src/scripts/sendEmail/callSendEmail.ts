@@ -18,11 +18,12 @@ export async function CallSendEmail() {
     console.log('Loaded email data:', emailData);
     console.log('Loaded edited data:', editedData);
 
-    emailData.forEach((element) => {
+    for (const element of emailData) {
       editedData.email = element.email;
       console.log('Sending email to:', editedData.email);
-      sendEmailWithEmailJS(editedData);
-    });
+      // 이메일 전송이 완료될 때까지 기다림
+      await sendEmailWithEmailJS(editedData);
+    }
   } catch (error) {
     console.error('Error in CallSendEmail:', error);
   }

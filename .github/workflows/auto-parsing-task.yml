@@ -1,4 +1,4 @@
-name: Scheduled Tasks
+name: Rss Auto Parsing Tasks
 
 on:
   # 매일 실행
@@ -9,7 +9,7 @@ on:
   # workflow_dispatch:
 
 jobs:
-  hourly-task:
+  parsing-task:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,7 @@ jobs:
         working-directory: backed_logic
         run: npm ci
 
-      - name: Run scheduled task
+      - name: Run Parsing tasks
         # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
         # package.json scripts에 맞춰 script:rss-parsing 로 실행 (로컬에서 성공한 명령)
         working-directory: backed_logic
@@ -47,7 +47,7 @@ jobs:
         # 크론 작업은 사람이 안 보고 있으니까, 실패 시 최소한 로그를 남기려는 장치
         if: failure() #GitHub Actions 내장 함수임
         run: |
-          echo "❌ Scheduled task failed"
+          echo "❌ auto-parsing task failed"
           echo "Timestamp: $(date)"
 
         # echo "여기의 문구를 출력"
