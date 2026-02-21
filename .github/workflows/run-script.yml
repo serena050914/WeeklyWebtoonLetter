@@ -13,6 +13,7 @@ on:
           - rss-parsing
           - select-items
           - edit-letter
+          - send-email
   # -> 실행시, gitjub.event.inputs.script 값에 옵션 값 중 하나가 할당됨
 
   # Scheduled runs (every day at 00:00 UTC)
@@ -76,6 +77,25 @@ jobs:
         if: github.event.inputs.script == 'edit-letter'
         working-directory: backed_logic
         run: npm run script:edit-letter
+
+      - name: Run Sending tasks
+        # Node 프로젝트가 backed_logic 폴더에 있으므로 그 위치에서 실행해야 함
+        # package.json scripts에 맞춰 script:send-email 로 실행 (로컬에서 성공한 명령)
+        if: github.event.inputs.script == 'send-email'
+        working-directory: backed_logic
+        run: npm run script:send-email
+        env:
+          NODE_ENV: production #운영모드로 실행해라
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          VITE_EMAILJS_SERVICE_ID: ${{ secrets.VITE_EMAILJS_SERVICE_ID }}
+          VITE_EMAILJS_TEMPLATE_ID: ${{ secrets.VITE_EMAILJS_TEMPLATE_ID }}
+          VITE_EMAILJS_PUBLIC_KEY: ${{ secrets.VITE_EMAILJS_PUBLIC_KEY }}
+          VITE_EMAILJS_PRIVATE_KEY: ${{ secrets.VITE_EMAILJS_PRIVATE_KEY }}
+          # 아래 두 줄은 Supabase 등 외부 서비스 연결이 필요할 때 사용
+          # (GitHub repo Settings > Secrets and variables > Actions 에 등록해두면 됨)
+          # SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          # SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4 # 실행한 결과를 저장하는 액션
